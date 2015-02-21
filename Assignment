@@ -1,0 +1,28 @@
+#my code will address temperature fluctuations and help with analysis of how the temperatures have increased since 1850.
+
+# global dictionary of year -> data points per month
+
+data = {}
+
+def parse_data_file(data_filename):
+	f = open(data_filename)
+	lines = f.read().splitlines()
+	for i in range(1, len(lines)):
+		# trim preceeding whitespace and split by space
+		line = lines[i].lstrip().split()
+		year = line[0]
+		data[year] = {}
+		for j in range(1, len(line)):
+			data[year][j] = line[j]
+
+
+parse_data_file("temperature_data.txt")
+
+
+def extract_data_for_month(month):
+	f = open(str(month) + ".txt", "w")
+	for i in range(1850, 2013):
+		year = str(i)
+		f.write(year + " " + data[year][month] + '\n')
+		print (year + " " + data[year][month])
+	f.close()
