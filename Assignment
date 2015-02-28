@@ -10,10 +10,10 @@ def parse_data_file(data_filename):
 	for i in range(1, len(lines)):
 		# trim preceeding whitespace and split by space
 		line = lines[i].lstrip().split()
-		year = line[0]
+		year = int(line[0])
 		data[year] = {}
 		for j in range(1, len(line)):
-			data[year][j] = line[j]
+			data[year][j] = float(line[j])
 
 
 parse_data_file("temperature_data.txt")
@@ -21,8 +21,36 @@ parse_data_file("temperature_data.txt")
 
 def extract_data_for_month(month):
 	f = open(str(month) + ".txt", "w")
-	for i in range(1850, 2013):
-		year = str(i)
-		f.write(year + " " + data[year][month] + '\n')
-		print (year + " " + data[year][month])
+	for year in range(1850, 2013):
+		f.write("%d,%f\n" % (year, data[year][month]))
+	f.close()
+
+def largest_residual_difference():
+	currMax = None
+	currMin = None
+	for year in range(1850, 2013):
+		for m in range (1, 13):
+			if currMin == None or data[year][m] < currMin:
+				currMin = data[year][m]
+			if currMax == None or data[year][m] > currMax:
+				currMax = data[year][m]
+	return currMax - currMin
+
+def lowest_anomaly():
+	min = None
+	for year in range (1850, 2013):
+		for m in range(1, 13):
+			if min == None or data[year][m] < min:
+				min = data[year][m]
+	return min
+
+def extract_min_anomaly_per_year():
+	f = open("min_anomaly_per_year.txt", "w")
+	min = None
+	for year in range(1850, 2013):
+		for m in range(1, 13):
+			if min == None or data[year][m] < min:
+				min = data[year][m]
+		f.write("%d,%f\n" % (year, min))
+		min = None
 	f.close()
